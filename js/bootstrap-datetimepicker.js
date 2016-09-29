@@ -1,5 +1,7 @@
 ﻿/* =========================================================
  * bootstrap-datetimepicker.js
+ * v2.3.11-0001
+ * https://github.com/hardcoretech/bootstrap-datetimepicker
  * =========================================================
  * Copyright 2012 Stefan Petre
  *
@@ -459,7 +461,7 @@
     setStartDate: function (startDate) {
       this.startDate = startDate || -Infinity;
       if (this.startDate !== -Infinity) {
-        this.startDate = DPGlobal.parseDate(this.startDate, this.format, this.language, this.formatType, this.timezone);
+        this.startDate = DPGlobal.parseDate(this.startDate, this.format, this.language, this.formatType, this.timezone, this.initialDate);
       }
       this.update();
       this.updateNavArrows();
@@ -468,7 +470,7 @@
     setEndDate: function (endDate) {
       this.endDate = endDate || Infinity;
       if (this.endDate !== Infinity) {
-        this.endDate = DPGlobal.parseDate(this.endDate, this.format, this.language, this.formatType, this.timezone);
+        this.endDate = DPGlobal.parseDate(this.endDate, this.format, this.language, this.formatType, this.timezone, this.initialDate);
       }
       this.update();
       this.updateNavArrows();
@@ -480,7 +482,7 @@
         this.datesDisabled = this.datesDisabled.split(/,\s*/);
       }
       this.datesDisabled = $.map(this.datesDisabled, function (d) {
-        return DPGlobal.parseDate(d, this.format, this.language, this.formatType, this.timezone).toDateString();
+        return DPGlobal.parseDate(d, this.format, this.language, this.formatType, this.timezone, this.initialDate).toDateString();
       });
       this.update();
       this.updateNavArrows();
@@ -601,7 +603,7 @@
         fromArgs = false;
       }
 
-      this.date = DPGlobal.parseDate(date, this.format, this.language, this.formatType, this.timezone);
+      this.date = DPGlobal.parseDate(date, this.format, this.language, this.formatType, this.timezone, this.initialDate);
 
       if (fromArgs) this.setValue();
 
@@ -1498,7 +1500,7 @@
       }
       return {separators: separators, parts: parts};
     },
-    parseDate: function (date, format, language, type, timezone) {
+    parseDate: function (date, format, language, type, timezone, initialDate) {
       if (date instanceof Date) {
         var dateUTC = new Date(date.valueOf() - date.getTimezoneOffset() * 60000);
         dateUTC.setMilliseconds(0);
@@ -1539,7 +1541,7 @@
         return UTCDate(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), 0);
       }
       var parts = date && date.toString().match(this.nonpunctuation) || [],
-        date = new Date(0, 0, 0, 0, 0, 0, 0),
+        date = new Date(initialDate),
         parsed = {},
         setters_order = ['hh', 'h', 'ii', 'i', 'ss', 's', 'yyyy', 'yy', 'M', 'MM', 'm', 'mm', 'D', 'DD', 'd', 'dd', 'H', 'HH', 'p', 'P', 'z', 'Z'],
         setters_map = {
