@@ -249,6 +249,7 @@
       this.keyboardNavigation = this.element.data('date-keyboard-navigation');
     }
 
+    this.todayBtnClickMode = (options.todayBtnClickMode || 'now'); // Acceptable values: 'clean', 'pick'
     this.todayBtn = (options.todayBtn || this.element.data('date-today-btn') || false);
     this.clearBtn = (options.clearBtn || this.element.data('date-clear-btn') || false);
     this.todayHighlight = (options.todayHighlight || this.element.data('date-today-highlight') || false);
@@ -975,18 +976,47 @@
                 break;
               case 'today':
                 var date = new Date();
-                date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0);
+                if (this.todayBtnClickMode === 'pick') {
+                  var day = date.getDate();
+                  var year = date.getUTCFullYear(),
+                    month = date.getUTCMonth(),
+                    hours = this.viewDate.getUTCHours(),
+                    minutes = this.viewDate.getUTCMinutes(),
+                    seconds = this.viewDate.getUTCSeconds();
 
-                // Respect startDate and endDate.
-                if (date < this.startDate) date = this.startDate;
-                else if (date > this.endDate) date = this.endDate;
+                  this.element.trigger({
+                    type: 'changeDay',
+                    date: this.viewDate
+                  });
+                  if (this.viewSelect >= 2) {
+                    this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
+                  }
+                  var oldViewMode = this.viewMode;
+                  if (oldViewMode == 2) {
+                   this.showMode(-1);
+                    this.fill();
+                    if (oldViewMode == this.viewMode && this.autoclose) {
+                      this.hide();
+                    }
+                  }
+                } else {
+                  if (this.todayBtnClickMode === 'clean') {
+                   date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+                  } else if (this.todayBtnClickMode === 'now') {
+                   date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0);
+                  }
 
-                this.viewMode = this.startViewMode;
-                this.showMode(0);
-                this._setDate(date);
-                this.fill();
-                if (this.autoclose) {
-                  this.hide();
+                  // Respect startDate and endDate.
+                  if (date < this.startDate) date = this.startDate;
+                  else if (date > this.endDate) date = this.endDate;
+
+                  this.viewMode = this.startViewMode;
+                  this.showMode(0);
+                  this._setDate(date);
+                  this.fill();
+                  if (this.autoclose) {
+                    this.hide();
+                  }
                 }
                 break;
             }
@@ -1781,7 +1811,7 @@
                 '</tr>' +
       '</thead>',
     contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
-    footTemplate: '<tfoot>' + 
+    footTemplate: '<tfoot>' +
                     '<tr><th colspan="7" class="today"></th></tr>' +
                     '<tr><th colspan="7" class="clear"></th></tr>' +
                   '</tfoot>'
