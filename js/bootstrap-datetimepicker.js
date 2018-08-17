@@ -124,7 +124,10 @@
 
     this.clickedOutside = function (e) {
         // Clicked outside the datetimepicker, hide it
-        if ($(e.target).closest('.datetimepicker').length === 0) {
+        // if ($(e.target).closest('.datetimepicker').length === 0) {
+        //     that.hide();
+        // }
+        if (!that.picker.find(e.target).addBack(e.target).length && !$(element).find(e.target).addBack(e.target).length) {
             that.hide();
         }
     }
@@ -249,7 +252,7 @@
       this.keyboardNavigation = this.element.data('date-keyboard-navigation');
     }
 
-    this.todayBtnClickMode = (options.todayBtnClickMode || 'now'); // Acceptable values: 'clean', 'pick'
+    this.todayBtnClickMode = (options.todayBtnClickMode || 'now'); // Acceptable values: 'now', 'clean', 'pick'
     this.todayBtn = (options.todayBtn || this.element.data('date-today-btn') || false);
     this.clearBtn = (options.clearBtn || this.element.data('date-clear-btn') || false);
     this.todayHighlight = (options.todayHighlight || this.element.data('date-today-highlight') || false);
