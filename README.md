@@ -597,6 +597,12 @@ To enalbe this feature. [jQuery Mouse Wheel Plugin](https://github.com/brandonaa
 
 ### Options
 
+#### defaultHoursMinutesValue
+
+{ hours: Integer, minutes: Integer } | Function. Default: null.
+
+While click td.day or 'Today', will take this setting as default time, not '00:00'.
+
 #### wheelViewModeNavigation
 
 Boolean.  Default: false
