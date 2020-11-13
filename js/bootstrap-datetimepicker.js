@@ -257,6 +257,35 @@
     this.clearBtn = (options.clearBtn || this.element.data('date-clear-btn') || false);
     this.todayHighlight = (options.todayHighlight || this.element.data('date-today-highlight') || false);
 
+    this.getDefaultHoursMinutesValue = function() {
+      let defaultHoursMinutesValue = null;
+      switch (typeof options.defaultHoursMinutesValue) {
+        case "function":
+          defaultHoursMinutesValue = options.defaultHoursMinutesValue();
+          break;
+        case "object":
+          defaultHoursMinutesValue = options.defaultHoursMinutesValue;
+          break;
+      }
+      return defaultHoursMinutesValue;
+    }
+
+    this.defaultHours = function() {
+      const defaultHoursMinutesValue = this.getDefaultHoursMinutesValue();
+      if (!defaultHoursMinutesValue) {
+        return null;
+      }
+      return parseInt(defaultHoursMinutesValue.hours);
+    };
+
+    this.defaultMinutes = function() {
+      const defaultHoursMinutesValue = this.getDefaultHoursMinutesValue();
+      if (!defaultHoursMinutesValue) {
+        return null;
+      }
+      return parseInt(defaultHoursMinutesValue.minutes);
+    };
+
     this.weekStart = ((options.weekStart || this.element.data('date-weekstart') || dates[this.language].weekStart || 0) % 7);
     this.weekEnd = ((this.weekStart + 6) % 7);
     this.startDate = -Infinity;
@@ -992,6 +1021,11 @@
                     date: this.viewDate
                   });
                   if (this.viewSelect >= 2) {
+                    // Override time if have default setting.
+                    const defaultHour = this.defaultHours();
+                    const defaultMinute = this.defaultMinutes();
+                    hours = defaultHour !== null ? defaultHour : hours;
+                    minutes = defaultMinute !== null ? defaultMinute : minutes;
                     this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
                   }
                   var oldViewMode = this.viewMode;
@@ -1004,7 +1038,12 @@
                   }
                 } else {
                   if (this.todayBtnClickMode === 'clean') {
-                   date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+                    // Override time if have default setting.
+                    const defaultHour = this.defaultHours();
+                    const defaultMinute = this.defaultMinutes();
+                    const hours = defaultHour !== null ? defaultHour : 0;
+                    const minutes = defaultMinute !== null ? defaultMinute : 0;
+                    date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0, 0);
                   } else if (this.todayBtnClickMode === 'now') {
                    date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0);
                   }
@@ -1129,6 +1168,11 @@
                 date: this.viewDate
               });
               if (this.viewSelect >= 2) {
+                // Override time if have default setting.
+                const defaultHour = this.defaultHours();
+                const defaultMinute = this.defaultMinutes();
+                hours = defaultHour !== null ? defaultHour : hours;
+                minutes = defaultMinute !== null ? defaultMinute : minutes;
                 this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
               }
             }
