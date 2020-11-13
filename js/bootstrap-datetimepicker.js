@@ -273,17 +273,17 @@
     this.defaultHours = function() {
       const defaultHoursMinutesValue = this.getDefaultHoursMinutesValue();
       if (!defaultHoursMinutesValue) {
-        return 0;
+        return null;
       }
-      return defaultHoursMinutesValue.hours;
+      return parseInt(defaultHoursMinutesValue.hours);
     };
 
     this.defaultMinutes = function() {
       const defaultHoursMinutesValue = this.getDefaultHoursMinutesValue();
       if (!defaultHoursMinutesValue) {
-        return 0;
+        return null;
       }
-      return defaultHoursMinutesValue.minutes;
+      return parseInt(defaultHoursMinutesValue.minutes);
     };
 
     this.weekStart = ((options.weekStart || this.element.data('date-weekstart') || dates[this.language].weekStart || 0) % 7);
@@ -1024,8 +1024,8 @@
                     // Override time if have default setting.
                     const defaultHour = this.defaultHours();
                     const defaultMinute = this.defaultMinutes();
-                    hours = Number.isInteger(defaultHour) ? defaultHour : hours;
-                    minutes = Number.isInteger(defaultMinute) ? defaultMinute : minutes;
+                    hours = defaultHour !== null ? defaultHour : hours;
+                    minutes = defaultMinute !== null ? defaultMinute : minutes;
                     this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
                   }
                   var oldViewMode = this.viewMode;
@@ -1041,8 +1041,8 @@
                     // Override time if have default setting.
                     const defaultHour = this.defaultHours();
                     const defaultMinute = this.defaultMinutes();
-                    const hours = Number.isInteger(defaultHour) ? defaultHour : 0;
-                    const minutes = Number.isInteger(defaultMinute) ? defaultMinute : 0;
+                    const hours = defaultHour !== null ? defaultHour : 0;
+                    const minutes = defaultMinute !== null ? defaultMinute : 0;
                     date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0, 0);
                   } else if (this.todayBtnClickMode === 'now') {
                    date = UTCDate(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), 0);
@@ -1171,8 +1171,8 @@
                 // Override time if have default setting.
                 const defaultHour = this.defaultHours();
                 const defaultMinute = this.defaultMinutes();
-                hours = Number.isInteger(defaultHour) ? defaultHour : hours;
-                minutes = Number.isInteger(defaultMinute) ? defaultMinute : minutes;
+                hours = defaultHour !== null ? defaultHour : hours;
+                minutes = defaultMinute !== null ? defaultMinute : minutes;
                 this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
               }
             }
